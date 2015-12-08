@@ -6,6 +6,7 @@ module MatchJson
         'date_time_iso8601' => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
         'date' => /^\d{4}-\d{2}-\d{2}/,
         'uuid' => /\h{32}/,
+        'id' => /\A\d+\z/,
         'email' => /\A[-a-z0-9_+\.]+\@([-a-z0-9]+\.)+[a-z0-9]{2,6}\z/i,
         'string' => /\A.+\z/i
       }
