@@ -11,11 +11,11 @@ module MatchJson
       }
 
       def initialize(expected_json)
-        @expected_json = JSON.parse(expected_json.gsub(/(?<!")(\{\w+\})(?!")/, '"\1:non-string"'))
+        @expected_json = JSON.parse(standardize_json(expected_json).gsub(/(?<!")(\{\w+\})(?!")/, '"\1:non-string"'))
       end
 
       def matches?(actual_json)
-        @actual_json = actual_json.respond_to?(:body) ? JSON.parse(actual_json.body) : JSON.parse(actual_json)
+        @actual_json = JSON.parse(standardize_json(actual_json))
 
         catch(:match) { json_included?(@actual_json, @expected_json) }
       end
@@ -29,6 +29,16 @@ module MatchJson
       end
 
       private
+
+      def standardize_json(maybe_json)
+        if maybe_json.respond_to?(:body)
+          maybe_json.body
+        elsif maybe_json.respond_to?(:to_json)
+          maybe_json.to_json
+        else
+          maybe_json
+        end
+      end
 
       def json_included?(actual, expected)
         equal_value?(actual, expected)
